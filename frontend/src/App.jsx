@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const API = 'http://localhost:8081/api/menu';
+const BASE_URL = 'http://localhost:8081';
 
 function App() {
     const [lang, setLang] = useState('ru');
@@ -11,6 +12,7 @@ function App() {
 
     useEffect(() => {
         fetch(`${API}/languages`)
+
             .then(r => r.json())
             .then(setLanguages);
     }, []);
@@ -38,13 +40,14 @@ function App() {
 
     return (
         <div className="min-h-screen bg-gray-50">
+            {/* Шапка */}
             <div className="bg-amber-700 text-white p-4 shadow-lg">
                 <div className="max-w-4xl mx-auto flex justify-between items-center">
-                    <h1 className="text-2xl font-bold">Кофейня ☕️</h1>
+                    <h1 className="text-2xl font-bold">Кофейня ☕</h1>
                     <select
                         value={lang}
-                        onChange={e => setLang(e.target.value)}
-                        className="bg-amber-800 px-4 py-2 rounded-lg"
+                        onChange={(e) => setLang(e.target.value)}
+                        className="bg-amber-800 px-4 py-2 rounded-lg text-white"
                     >
                         {languages.map(l => (
                             <option key={l.id} value={l.code}>{l.name}</option>
@@ -53,18 +56,19 @@ function App() {
                 </div>
             </div>
 
+            {/* Категории */}
             {!selectedCategory ? (
                 <div className="max-w-6xl mx-auto p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {categories.map(cat => (
                         <div
                             key={cat.id}
                             onClick={() => loadItems(cat.id)}
-                            className="bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer hover:scale-105 transition"
+                            className="bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer transform transition hover:scale-105"
                         >
                             {cat.imageUrl ? (
-                                <img src={cat.imageUrl} alt={cat.name} className="w-full h-48 object-cover" />
+                                <img src={BASE_URL + cat.imageUrl} alt={cat.name} className="w-full h-48 object-cover" />
                             ) : (
-                                <div className="bg-gray-200 border-2 border-dashed w-full h-48" />
+                                <div className="bg-gray-200 w-full h-48" />
                             )}
                             <div className="p-4 text-center">
                                 <h3 className="text-xl font-semibold">{cat.name}</h3>
@@ -73,6 +77,7 @@ function App() {
                     ))}
                 </div>
             ) : (
+                // Позиции
                 <div className="max-w-4xl mx-auto p-6">
                     <button onClick={back} className="mb-6 text-amber-700 font-bold text-lg">
                         ← Назад
@@ -81,7 +86,7 @@ function App() {
                         {items.map(item => (
                             <div key={item.id} className="bg-white rounded-xl shadow-lg overflow-hidden flex">
                                 {item.imageUrl ? (
-                                    <img src={item.imageUrl} alt={item.name} className="w-32 h-32 object-cover" />
+                                    <img src={BASE_URL + item.imageUrl} alt={item.name} className="w-32 h-32 object-cover" />
                                 ) : (
                                     <div className="bg-gray-200 w-32 h-32" />
                                 )}
